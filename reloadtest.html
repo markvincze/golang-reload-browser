@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Reload test page</title>
+    <script type="text/javascript">
+/**
+ * Tries to connect to the reload service and start listening to reload events.
+ *
+ * @function tryConnectToReload
+ * @public
+ */
+function tryConnectToReload(address) {
+  var conn;
+  // This is a statically defined port on which the CLI is hosting the reload service.
+  try {
+    conn = new WebSocket("ws://localhost:13221/reload");
+  }
+  catch (ex) {
+    // If an exception is thrown, that means that we couldn't connect to to WebSockets because of mixed content
+    // security restrictions, so we try to connect using wss.
+    conn = new WebSocket("wss://localhost:13222/reload");
+  }
+
+  conn.onclose = function(evt) {
+    setTimeout(() => tryConnectToReload(), 2000);
+  };
+
+  conn.onmessage = function(evt) {
+    appendLog("Refresh received!");
+
+    // If we uncomment this line, then the page will refresh every time a message is received.
+    //location.reload()
+  };
+}
+
+function appendLog(msg){
+    var d = document.getElementById("log");
+    d.innerHTML += '<br /><span>' + msg + '</span>';
+}
+
+try {
+  if (window["WebSocket"]) {
+    tryConnectToReload();
+  } else {
+    appendLog("Your browser does not support WebSockets, cannot connect to the reload service.");
+  }
+} catch (ex) {
+  appendLog('Exception during connecting to reload:', ex);
+}
+</script>
+</head>
+
+<body>
+    <div id="log"><span>Log:</span></div>
+</body>
+
+</html>
