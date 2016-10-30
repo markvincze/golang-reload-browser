@@ -11,19 +11,12 @@
  * @public
  */
 function tryConnectToReload(address) {
-  var conn;
-  // This is a statically defined port on which the CLI is hosting the reload service.
-  try {
-    conn = new WebSocket("ws://localhost:13221/reload");
-  }
-  catch (ex) {
-    // If an exception is thrown, that means that we couldn't connect to to WebSockets because of mixed content
-    // security restrictions, so we try to connect using wss.
-    conn = new WebSocket("wss://localhost:13222/reload");
-  }
+  var conn = new WebSocket(address);
 
-  conn.onclose = function(evt) {
-    setTimeout(() => tryConnectToReload(), 2000);
+  conn.onclose = function() {
+    setTimeout(function() {
+      tryConnectToReload(address);
+    }, 2000);
   };
 
   conn.onmessage = function(evt) {
@@ -41,12 +34,20 @@ function appendLog(msg){
 
 try {
   if (window["WebSocket"]) {
-    tryConnectToReload();
+    // The reload endpoint is hosted on a statically defined port.
+    try {
+      tryConnectToReload("ws://localhost:12450/reload");
+    }
+    catch (ex) {
+      // If an exception is thrown, that means that we couldn't connect to to WebSockets because of mixed content
+      // security restrictions, so we try to connect using wss.
+      tryConnectToReload("wss://localhost:12451/reload");
+    }
   } else {
-    appendLog("Your browser does not support WebSockets, cannot connect to the reload service.");
+    console.log("Your browser does not support WebSockets, cannot connect to the Reload service.");
   }
 } catch (ex) {
-  appendLog('Exception during connecting to reload:', ex);
+  console.error('Exception during connecting to Reload:', ex);
 }
 </script>
 </head>

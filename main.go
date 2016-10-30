@@ -9,7 +9,6 @@ import (
 func main() {
 	log.Println("Starting reload server.")
 
-	// livereload
 	startReloadServer()
 
 	log.Println("Reload server started.")

@@ -10,8 +10,8 @@ import (
 var (
 	hub *Hub
 	// The port on which we are hosting the reload server has to be hardcoded on the client-side too.
-	reloadAddress    = ":13221"
-	reloadAddressTLS = ":13222"
+	reloadAddress    = ":12450"
+	reloadAddressTLS = ":12451"
 )
 
 const (
@@ -51,7 +51,7 @@ k7iRrF0Vcllo8k/Mos5PVPP0WIyS1l0lh4GZ+w8gA80=
 )
 
 func createCertFiles() (cert string, key string) {
-	tempFolder, _ := ioutil.TempDir("", "appix")
+	tempFolder, _ := ioutil.TempDir("", "reload")
 
 	cert = tempFolder + "/reload-cert.pem"
 	key = tempFolder + "/reload-key.pem"
