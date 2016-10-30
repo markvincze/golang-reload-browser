@@ -9,7 +9,7 @@ import (
 
 var (
 	hub *Hub
-	// Appix always hosts the reload server at 13221. This is the port the frontend has to try to use to connect to.
+	// The port on which we are hosting the reload server has to be hardcoded on the client-side too.
 	reloadAddress    = ":13221"
 	reloadAddressTLS = ":13222"
 )
